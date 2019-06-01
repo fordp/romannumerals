@@ -44,22 +44,25 @@ class _DecimalToRomanState extends State<DecimalToRoman> {
   }
 
   Widget textboxEntryArea() {
-    return new TextField(
-      textInputAction: TextInputAction.go,
-      decoration: new InputDecoration(
-        labelText: "Enter a decimal number",
-        fillColor: Colors.white,
-        border: new OutlineInputBorder(
-          borderRadius: new BorderRadius.circular(25.0),
-          borderSide: new BorderSide(),
+    return new Padding(
+      padding: const EdgeInsets.only(left: 20.0, right: 20.0),
+      child: new TextField(
+        textInputAction: TextInputAction.go,
+        decoration: new InputDecoration(
+          labelText: "Enter a decimal number",
+          fillColor: Colors.white,
+          border: new OutlineInputBorder(
+            borderRadius: new BorderRadius.circular(25.0),
+            borderSide: new BorderSide(),
+          ),
         ),
+        controller: myController,
+        onChanged: (v) => setState(() {
+              //_roman = v;
+            }),
+        keyboardType: TextInputType.number,
+        style: new TextStyle(fontFamily: "Arvo"),
       ),
-      controller: myController,
-      onChanged: (v) => setState(() {
-            //_roman = v;
-          }),
-      keyboardType: TextInputType.number,
-      style: new TextStyle(fontFamily: "Arvo"),
     );
   }
 
@@ -93,7 +96,7 @@ class _DecimalToRomanState extends State<DecimalToRoman> {
 
   Widget convertButton() {
     return Padding(
-      padding: const EdgeInsets.all(10.0),
+      padding: const EdgeInsets.all(5.0),
       child: Builder(
         builder: (context) {
           return RaisedButton(
@@ -149,13 +152,13 @@ class _DecimalToRomanState extends State<DecimalToRoman> {
 
   Widget createConversionArea(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(30.0),
+      padding: EdgeInsets.all(10.0),
       // color: Colors.white,
       child: new Container(
         child: new Center(
           child: new Column(
             children: [
-              paddingEdgeInsetsTop(40.0),
+              paddingEdgeInsetsTop(20.0),
               new Text(
                 'Enter a Decimal Number.',
                 style:
