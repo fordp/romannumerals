@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:supacentre_app/widgets/helpers/convert_to_decimal.dart';
+import 'package:kids_app/widgets/helpers/convert_to_decimal.dart';
 import '../widgets/helpers/convert_to_roman.dart';
 
 class RomanConversion extends StatefulWidget {
@@ -12,6 +12,8 @@ class RomanConversion extends StatefulWidget {
 class _RomanConversionState extends State<RomanConversion> {
   String _roman = "";
   String _dec = "";
+  double deviceHeight;
+  double deviceWidth;
 
   Widget createAppBar() {
     return AppBar(
@@ -31,6 +33,8 @@ class _RomanConversionState extends State<RomanConversion> {
       var theNum = myDecController.text;
       if (theNum.length == 0) {
         _roman = "Enter a Number.";
+      } else if (int.tryParse(theNum) >= 4000) {
+        _roman = "The number must be less than 4000.";
       } else {
         var dtr = new ConvertDecimalToRoman();
         var aa = dtr.decimalToRoman(int.tryParse(theNum));
@@ -70,7 +74,7 @@ class _RomanConversionState extends State<RomanConversion> {
     return new Padding(
       padding: const EdgeInsets.only(left: 20.0, right: 20.0),
       child: new TextField(
-        textInputAction: TextInputAction.go,
+        // textInputAction: TextInputAction.go,
         decoration: new InputDecoration(
           labelText: "Enter a decimal number",
           fillColor: Colors.white,
@@ -90,22 +94,25 @@ class _RomanConversionState extends State<RomanConversion> {
   }
 
   Widget textboxRomanEntryArea() {
-    return new TextField(
-      textInputAction: TextInputAction.go,
-      decoration: new InputDecoration(
-        labelText: "Enter a roman numeral",
-        fillColor: Colors.white,
-        border: new OutlineInputBorder(
-          borderRadius: new BorderRadius.circular(25.0),
-          borderSide: new BorderSide(),
+    return new Padding(
+      padding: const EdgeInsets.only(left: 20.0, right: 20.0),
+      child: new TextField(
+        // textInputAction: TextInputAction.go,
+        decoration: new InputDecoration(
+          labelText: "Enter a roman numeral",
+          fillColor: Colors.white,
+          border: new OutlineInputBorder(
+            borderRadius: new BorderRadius.circular(25.0),
+            borderSide: new BorderSide(),
+          ),
         ),
+        controller: myRomanController,
+        onChanged: (v) => setState(() {
+              //_roman = v;
+            }),
+        keyboardType: TextInputType.number,
+        style: new TextStyle(fontFamily: "Arvo"),
       ),
-      controller: myRomanController,
-      onChanged: (v) => setState(() {
-            //_roman = v;
-          }),
-      keyboardType: TextInputType.number,
-      style: new TextStyle(fontFamily: "Arvo"),
     );
   }
 
@@ -139,12 +146,12 @@ class _RomanConversionState extends State<RomanConversion> {
 
   Widget conversionDecimalResultAreaResult() {
     return Padding(
-      padding: const EdgeInsets.all(10.0),
+      padding: const EdgeInsets.all(5.0),
       child: new Text(
         _roman,
         style: TextStyle(
           fontWeight: FontWeight.bold,
-          fontSize: 30,
+          fontSize: 25,
           color: Colors.redAccent,
         ),
       ),
@@ -153,12 +160,12 @@ class _RomanConversionState extends State<RomanConversion> {
 
   Widget conversionRomanResultAreaResult() {
     return Padding(
-      padding: const EdgeInsets.all(10.0),
+      padding: const EdgeInsets.all(5.0),
       child: new Text(
         _dec,
         style: TextStyle(
           fontWeight: FontWeight.bold,
-          fontSize: 30,
+          fontSize: 25,
           color: Colors.redAccent,
         ),
       ),
@@ -167,7 +174,7 @@ class _RomanConversionState extends State<RomanConversion> {
 
   Widget convertDecimalButton() {
     return Padding(
-      padding: const EdgeInsets.all(5.0),
+      padding: const EdgeInsets.all(10.0),
       child: Builder(
         builder: (context) {
           return RaisedButton(
@@ -187,7 +194,7 @@ class _RomanConversionState extends State<RomanConversion> {
 
   Widget convertRomanButton() {
     return Padding(
-      padding: const EdgeInsets.all(5.0),
+      padding: const EdgeInsets.all(10.0),
       child: Builder(
         builder: (context) {
           return RaisedButton(
@@ -207,7 +214,7 @@ class _RomanConversionState extends State<RomanConversion> {
 
   Widget clearDecimalButton() {
     return Padding(
-      padding: const EdgeInsets.all(5.0),
+      padding: const EdgeInsets.all(10.0),
       child: Builder(
         builder: (context) {
           return RaisedButton(
@@ -227,7 +234,7 @@ class _RomanConversionState extends State<RomanConversion> {
 
   Widget clearRomanButton() {
     return Padding(
-      padding: const EdgeInsets.all(5.0),
+      padding: const EdgeInsets.all(10.0),
       child: Builder(
         builder: (context) {
           return RaisedButton(
@@ -272,25 +279,33 @@ class _RomanConversionState extends State<RomanConversion> {
   }
 
   Widget createDecimalConversionArea(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(10.0),
-      // color: Colors.white,
-      child: new Container(
-        child: new Center(
-          child: new Column(
-            children: [
-              paddingEdgeInsetsTop(20.0),
-              new Text(
-                'Enter a Decimal Number.',
-                style:
-                    new TextStyle(color: hexToColor("#F2A03D"), fontSize: 25.0),
+    return Center(
+      child: Padding(
+        padding:
+            EdgeInsets.only(top: 10.0, bottom: 10.0, left: 20.0, right: 20.0),
+        child: new Card(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15.0),
+          ),
+          elevation: 25.0,
+          child: new Container(
+            child: Container(
+              child: new Column(
+                children: [
+                  paddingEdgeInsetsTop(10.0),
+                  new Text(
+                    'Convert Decimal Number',
+                    style: new TextStyle(
+                        color: hexToColor("#F2A03D"), fontSize: 25.0),
+                  ),
+                  paddingEdgeInsetsTop(5.0),
+                  textboxDecimalEntryArea(),
+                  conversionDecimalResultAreaText(),
+                  conversionDecimalResultAreaResult(),
+                  decimalButtonArea(),
+                ],
               ),
-              paddingEdgeInsetsTop(20.0),
-              textboxDecimalEntryArea(),
-              conversionDecimalResultAreaText(),
-              conversionDecimalResultAreaResult(),
-              decimalButtonArea(),
-            ],
+            ),
           ),
         ),
       ),
@@ -298,25 +313,33 @@ class _RomanConversionState extends State<RomanConversion> {
   }
 
   Widget createRomanConversionArea(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(30.0),
-      // color: Colors.white,
-      child: new Container(
-        child: new Center(
-          child: new Column(
-            children: [
-              paddingEdgeInsetsTop(40.0),
-              new Text(
-                'Enter a Roman Numeral.',
-                style:
-                    new TextStyle(color: hexToColor("#F2A03D"), fontSize: 25.0),
+    return Center(
+      child: Padding(
+        padding:
+            EdgeInsets.only(top: 10.0, bottom: 10.0, left: 20.0, right: 20.0),
+        child: new Card(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15.0),
+          ),
+          elevation: 25.0,
+          child: new Container(
+            child: Container(
+              child: new Column(
+                children: [
+                  paddingEdgeInsetsTop(10.0),
+                  new Text(
+                    'Convert Roman Numeral',
+                    style: new TextStyle(
+                        color: hexToColor("#F2A03D"), fontSize: 25.0),
+                  ),
+                  paddingEdgeInsetsTop(5.0),
+                  textboxRomanEntryArea(),
+                  conversionRomanResultAreaText(),
+                  conversionRomanResultAreaResult(),
+                  romanButtonArea(),
+                ],
               ),
-              paddingEdgeInsetsTop(20.0),
-              textboxRomanEntryArea(),
-              conversionRomanResultAreaText(),
-              conversionRomanResultAreaResult(),
-              romanButtonArea(),
-            ],
+            ),
           ),
         ),
       ),
@@ -324,16 +347,22 @@ class _RomanConversionState extends State<RomanConversion> {
   }
 
   Widget createBody(BuildContext context) {
-    return ListView(
-      children: <Widget>[
-        createDecimalConversionArea(context),
-        createRomanConversionArea(context)
-      ],
+    return Container(
+      color: Colors.lightBlueAccent,
+      child: ListView(
+        children: <Widget>[
+          createDecimalConversionArea(context),
+          createRomanConversionArea(context)
+        ],
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    deviceHeight = MediaQuery.of(context).size.height;
+    deviceWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
       appBar: createAppBar(),
       body: createBody(context),
