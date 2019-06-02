@@ -11,30 +11,36 @@ class RomanConversion extends StatefulWidget {
 
 class _RomanConversionState extends State<RomanConversion> {
   String _roman = "";
+  String _romanErr = "";
   String _dec = "";
+  String _decErr = "";
   double deviceHeight;
   double deviceWidth;
-
-  Widget createAppBar() {
-    return AppBar(
-      title: Text("Roman Numeral Conversion"),
-    );
-  }
-
-  Color hexToColor(String code) {
-    return new Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
-  }
 
   final myDecController = new TextEditingController();
   final myRomanController = new TextEditingController();
 
+  // **************************************************************** //
+  // Helper functions.
+  Color hexToColor(String code) {
+    return new Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
+  }
+
+  Widget paddingEdgeInsetsTop(var number) {
+    return new Padding(
+      padding: EdgeInsets.only(top: number),
+    );
+  }
+
+  // **************************************************************** //
+  // Action functions.
   void submitConvertNumber(BuildContext context) {
     setState(() {
       var theNum = myDecController.text;
       if (theNum.length == 0) {
         _roman = "Enter a Number.";
       } else if (int.tryParse(theNum) >= 4000) {
-        _roman = "The number must be less than 4000.";
+        _romanErr = "The number must be less than 4000.";
       } else {
         var dtr = new ConvertDecimalToRoman();
         var aa = dtr.decimalToRoman(int.tryParse(theNum));
@@ -43,33 +49,40 @@ class _RomanConversionState extends State<RomanConversion> {
     });
   }
 
-  void submitConvertRoman(BuildContext context) {
-    setState(() {
-      var theNum = myRomanController.text;
-      if (theNum.length == 0) {
-        _dec = "Enter a Roman Numeral.";
-      } else {
-        var dtr = new ConvertRomanToDecimal();
-        var aa = dtr.romanToDecimal(theNum);
-        _dec = "$aa";
-      }
-    });
-  }
-
   void submitClearNumber(BuildContext context) {
     setState(() {
       myDecController.text = "";
+      _romanErr = "";
       _roman = "";
+    });
+  }
+
+  void submitConvertRoman(BuildContext context) {
+    setState(() {
+      var theNum = myRomanController.text;
+      var dtr = new ConvertRomanToDecimal();
+      var aa = dtr.romanToDecimal(theNum);
+
+      if (theNum.length == 0) {
+        _dec = "Enter a Roman Numeral.";
+      } else if (aa > 3999) {
+        _decErr = "Should be less than (4000) MMMM.";
+      } else {
+        _dec = "$aa";
+      }
     });
   }
 
   void submitClearRoman(BuildContext context) {
     setState(() {
       myRomanController.text = "";
+      _decErr = "";
       _dec = "";
     });
   }
 
+  // **************************************************************** //
+  // Convert decimal Number area.
   Widget textboxDecimalEntryArea() {
     return new Padding(
       padding: const EdgeInsets.only(left: 20.0, right: 20.0),
@@ -93,52 +106,27 @@ class _RomanConversionState extends State<RomanConversion> {
     );
   }
 
-  Widget textboxRomanEntryArea() {
-    return new Padding(
-      padding: const EdgeInsets.only(left: 20.0, right: 20.0),
-      child: new TextField(
-        // textInputAction: TextInputAction.go,
-        decoration: new InputDecoration(
-          labelText: "Enter a roman numeral",
-          fillColor: Colors.white,
-          border: new OutlineInputBorder(
-            borderRadius: new BorderRadius.circular(25.0),
-            borderSide: new BorderSide(),
-          ),
+  Widget conversionDecimalResultAreaError() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 5.0),
+      child: new Text(
+        _romanErr,
+        style: TextStyle(
+          fontSize: 15,
+          color: Colors.redAccent,
         ),
-        controller: myRomanController,
-        onChanged: (v) => setState(() {
-              //_roman = v;
-            }),
-        keyboardType: TextInputType.number,
-        style: new TextStyle(fontFamily: "Arvo"),
       ),
     );
   }
 
   Widget conversionDecimalResultAreaText() {
     return Padding(
-      padding: const EdgeInsets.only(top: 20.0),
+      padding: const EdgeInsets.only(top: 5.0),
       child: new Text(
         "Roman Value: ",
         style: TextStyle(
           fontSize: 25,
           color: hexToColor("#F2A03D"),
-          // fontWeight: FontWeight.bold,
-        ),
-      ),
-    );
-  }
-
-  Widget conversionRomanResultAreaText() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 20.0),
-      child: new Text(
-        "Decimal Value: ",
-        style: TextStyle(
-          fontSize: 25,
-          color: hexToColor("#F2A03D"),
-          // fontWeight: FontWeight.bold,
         ),
       ),
     );
@@ -153,20 +141,7 @@ class _RomanConversionState extends State<RomanConversion> {
           fontWeight: FontWeight.bold,
           fontSize: 25,
           color: Colors.redAccent,
-        ),
-      ),
-    );
-  }
-
-  Widget conversionRomanResultAreaResult() {
-    return Padding(
-      padding: const EdgeInsets.all(5.0),
-      child: new Text(
-        _dec,
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
-          fontSize: 25,
-          color: Colors.redAccent,
+          backgroundColor: Colors.grey,
         ),
       ),
     );
@@ -179,26 +154,6 @@ class _RomanConversionState extends State<RomanConversion> {
         builder: (context) {
           return RaisedButton(
             onPressed: () => submitConvertNumber(context),
-            color: Colors.lightGreen,
-            child: Text(
-              'Convert',
-              style: TextStyle(color: Colors.white),
-            ),
-            shape: new RoundedRectangleBorder(
-                borderRadius: new BorderRadius.circular(25.0)),
-          );
-        },
-      ),
-    );
-  }
-
-  Widget convertRomanButton() {
-    return Padding(
-      padding: const EdgeInsets.all(10.0),
-      child: Builder(
-        builder: (context) {
-          return RaisedButton(
-            onPressed: () => submitConvertRoman(context),
             color: Colors.lightGreen,
             child: Text(
               'Convert',
@@ -232,6 +187,101 @@ class _RomanConversionState extends State<RomanConversion> {
     );
   }
 
+  Widget decimalButtonArea() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        convertDecimalButton(),
+        clearDecimalButton(),
+      ],
+    );
+  }
+
+  // **************************************************************** //
+  // Convert Roman Numeral area.
+  Widget textboxRomanEntryArea() {
+    return new Padding(
+      padding: const EdgeInsets.only(left: 20.0, right: 20.0),
+      child: new TextField(
+        // textInputAction: TextInputAction.go,
+        decoration: new InputDecoration(
+          labelText: "Enter a roman numeral",
+          fillColor: Colors.white,
+          border: new OutlineInputBorder(
+            borderRadius: new BorderRadius.circular(25.0),
+            borderSide: new BorderSide(),
+          ),
+        ),
+        controller: myRomanController,
+        onChanged: (v) => setState(() {
+              //_roman = v;
+            }),
+        keyboardType: TextInputType.number,
+        style: new TextStyle(fontFamily: "Arvo"),
+      ),
+    );
+  }
+
+  Widget conversionRomanResultAreaError() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 5.0),
+      child: new Text(
+        _decErr,
+        style: TextStyle(
+          fontSize: 15,
+          color: Colors.redAccent,
+        ),
+      ),
+    );
+  }
+
+  Widget conversionRomanResultAreaText() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 15.0),
+      child: new Text(
+        "Decimal Value: ",
+        style: TextStyle(
+          fontSize: 25,
+          color: hexToColor("#F2A03D"),
+        ),
+      ),
+    );
+  }
+
+  Widget conversionRomanResultAreaResult() {
+    return Padding(
+      padding: const EdgeInsets.all(5.0),
+      child: new Text(
+        _dec,
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 25,
+          color: Colors.redAccent,
+        ),
+      ),
+    );
+  }
+
+  Widget convertRomanButton() {
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: Builder(
+        builder: (context) {
+          return RaisedButton(
+            onPressed: () => submitConvertRoman(context),
+            color: Colors.lightGreen,
+            child: Text(
+              'Convert',
+              style: TextStyle(color: Colors.white),
+            ),
+            shape: new RoundedRectangleBorder(
+                borderRadius: new BorderRadius.circular(25.0)),
+          );
+        },
+      ),
+    );
+  }
+
   Widget clearRomanButton() {
     return Padding(
       padding: const EdgeInsets.all(10.0),
@@ -252,16 +302,6 @@ class _RomanConversionState extends State<RomanConversion> {
     );
   }
 
-  Widget decimalButtonArea() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        convertDecimalButton(),
-        clearDecimalButton(),
-      ],
-    );
-  }
-
   Widget romanButtonArea() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -272,12 +312,8 @@ class _RomanConversionState extends State<RomanConversion> {
     );
   }
 
-  Widget paddingEdgeInsetsTop(var number) {
-    return new Padding(
-      padding: EdgeInsets.only(top: number),
-    );
-  }
-
+  // **************************************************************** //
+  // The Card setup areas.
   Widget createDecimalConversionArea(BuildContext context) {
     return Center(
       child: Padding(
@@ -300,6 +336,7 @@ class _RomanConversionState extends State<RomanConversion> {
                   ),
                   paddingEdgeInsetsTop(5.0),
                   textboxDecimalEntryArea(),
+                  conversionDecimalResultAreaError(),
                   conversionDecimalResultAreaText(),
                   conversionDecimalResultAreaResult(),
                   decimalButtonArea(),
@@ -334,6 +371,7 @@ class _RomanConversionState extends State<RomanConversion> {
                   ),
                   paddingEdgeInsetsTop(5.0),
                   textboxRomanEntryArea(),
+                  conversionRomanResultAreaError(),
                   conversionRomanResultAreaText(),
                   conversionRomanResultAreaResult(),
                   romanButtonArea(),
@@ -343,6 +381,14 @@ class _RomanConversionState extends State<RomanConversion> {
           ),
         ),
       ),
+    );
+  }
+
+  // **************************************************************** //
+  // Screen creation area.
+  Widget createAppBar() {
+    return AppBar(
+      title: Text("Roman Numeral Conversion"),
     );
   }
 
@@ -364,7 +410,7 @@ class _RomanConversionState extends State<RomanConversion> {
     deviceWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      appBar: createAppBar(),
+      // appBar: createAppBar(),
       body: createBody(context),
     );
   }
