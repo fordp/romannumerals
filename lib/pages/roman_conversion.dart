@@ -10,6 +10,8 @@ class RomanConversion extends StatefulWidget {
 }
 
 class _RomanConversionState extends State<RomanConversion> {
+  int _cIndex = 0;
+
   String _roman = "";
   String _romanErr = "";
   String _dec = "";
@@ -34,6 +36,12 @@ class _RomanConversionState extends State<RomanConversion> {
 
   // **************************************************************** //
   // Action functions.
+  void _incrementTab(index) {
+    setState(() {
+      _cIndex = index;
+    });
+  }
+
   void submitConvertNumber(BuildContext context) {
     setState(() {
       var theNum = myDecController.text;
@@ -404,6 +412,38 @@ class _RomanConversionState extends State<RomanConversion> {
     );
   }
 
+  Widget createBottomNavBar(BuildContext context) {
+    return BottomNavigationBar(
+      currentIndex: _cIndex,
+      type: BottomNavigationBarType.shifting,
+      items: [
+        BottomNavigationBarItem(
+          icon: Icon(Icons.ac_unit, color: Color.fromARGB(255, 0, 0, 0)),
+          title: new Text(''),
+          backgroundColor: Colors.indigo,
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.ac_unit, color: Color.fromARGB(255, 0, 0, 0)),
+          title: new Text(''),
+          backgroundColor: Colors.amber,
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.ac_unit, color: Color.fromARGB(255, 0, 0, 0)),
+          title: new Text(''),
+          backgroundColor: Colors.indigo,
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.access_alarm, color: Color.fromARGB(255, 0, 0, 0)),
+          title: new Text(''),
+          backgroundColor: Colors.indigo,
+        ),
+      ],
+      onTap: (index) {
+        _incrementTab(index);
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     deviceHeight = MediaQuery.of(context).size.height;
@@ -412,6 +452,7 @@ class _RomanConversionState extends State<RomanConversion> {
     return Scaffold(
       // appBar: createAppBar(),
       body: createBody(context),
+      bottomNavigationBar: createBottomNavBar(context),
     );
   }
 }

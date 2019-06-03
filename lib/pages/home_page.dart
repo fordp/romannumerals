@@ -25,12 +25,6 @@ class _MyHomePageState extends State<MyHomePage> {
           fontWeight: FontWeight.bold,
         ),
       ),
-      actions: <Widget>[
-        new Icon(
-          Icons.menu,
-          color: mainColor,
-        ),
-      ],
     );
   }
 
