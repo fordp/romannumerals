@@ -2,6 +2,14 @@
 
 A new Flutter project.
 
+https://flutterawesome.com/burnoff-app-in-flutter-inspired-by-a-design-in-uplabs/
+https://github.com/huextrat/BurnOff
+https://github.com/Solido/awesome-flutter
+https://flutterawesome.com/
+https://proandroiddev.com/flutter-thursday-02-beautiful-list-ui-and-detail-page-a9245f5ceaf0
+
+
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.
